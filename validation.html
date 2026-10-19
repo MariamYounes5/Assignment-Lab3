@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio - Registration Validation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">Studio</a>
+    <nav aria-label="Main Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a class="active" href="validation.html">Validation</a></li>
+        <li><a href="data.html">Data Table</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1>Register Account</h1>
+      <p class="label">Fill out the form below. JavaScript will validate all fields upon submission.</p>
+
+      <div class="card" style="max-width: 520px; margin-top: 20px;">
+        <form id="registrationForm" novalidate>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name">
+            <span class="error-msg" id="nameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="example@domain.com">
+            <span class="error-msg" id="emailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="At least 8 characters">
+            <span class="error-msg" id="passwordError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password">
+            <span class="error-msg" id="confirmPasswordError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age">
+            <span class="error-msg" id="ageError"></span>
+          </div>
+
+          <button type="submit" class="btn">Submit Registration</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" style="margin-top: 48px;">
+    <div class="container">In-Lab Practice (Studio)</div>
+  </footer>
+
+  <script>
+    const form = document.querySelector("#registrationForm");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // Stop form from reloading page (Page 12 in Guide)
+      let isValid = true;
+
+     
+      document.querySelectorAll(".error-msg").forEach(el => el.textContent = "");
+
+     
+      const name = document.querySelector("#name").value.trim();
+      const email = document.querySelector("#email").value.trim();
+      const password = document.querySelector("#password").value;
+      const confirmPassword = document.querySelector("#confirmPassword").value;
+      const ageVal = document.querySelector("#age").value;
+      const age = Number(ageVal);
+
+     
+      if (name === "") {
+        document.querySelector("#nameError").textContent = "Name is required.";
+        isValid = false;
+      }
+
+     
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email === "") {
+        document.querySelector("#emailError").textContent = "Email address is required.";
+        isValid = false;
+      } else if (!emailPattern.test(email)) {
+        document.querySelector("#emailError").textContent = "Please enter a valid email address.";
+        isValid = false;
+      }
+
+      
+      if (password === "") {
+        document.querySelector("#passwordError").textContent = "Password is required.";
+        isValid = false;
+      } else if (password.length < 8) {
+        document.querySelector("#passwordError").textContent = "Password must be at least 8 characters.";
+        isValid = false;
+      }
+
+      
+      if (confirmPassword === "") {
+        document.querySelector("#confirmPasswordError").textContent = "Please confirm your password.";
+        isValid = false;
+      } else if (password !== confirmPassword) {
+        document.querySelector("#confirmPasswordError").textContent = "Passwords do not match.";
+        isValid = false;
+      }
+
+      
+      if (ageVal === "") {
+        document.querySelector("#ageError").textContent = "Age is required.";
+        isValid = false;
+      } else if (isNaN(age) || age < 18 || age > 100) {
+        document.querySelector("#ageError").textContent = "Age must be a valid number between 18 and 100.";
+        isValid = false;
+      }
+
+      
+      if (isValid) {
+        alert("Registration successful!");
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

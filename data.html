@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio - Dynamic Data Table</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">Studio</a>
+    <nav aria-label="Main Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="validation.html">Validation</a></li>
+        <li><a class="active" href="data.html">Data Table</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1>Dynamic Data Table</h1>
+      <p class="label">Live filter search and column sorting using JavaScript.</p>
+
+      <div class="row" style="margin-bottom: 20px; justify-content: space-between;">
+        <div style="flex: 1; max-width: 320px;">
+          <input type="text" id="searchInput" placeholder="Search by name or city..." style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text);">
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="sortNameBtn" class="btn btn-outline" type="button">Sort by Name</button>
+          <button id="sortAgeBtn" class="btn btn-outline" type="button">Sort by Age</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>City</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+           
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" style="margin-top: 48px;">
+    <div class="container">In-Lab Practice (Studio)</div>
+  </footer>
+
+  <script>
+    
+    const people = [
+      { name: "Ada Lovelace", age: 36, city: "London" },
+      { name: "Alan Turing", age: 41, city: "London" },
+      { name: "Grace Hopper", age: 85, city: "New York" },
+      { name: "Linus Torvalds", age: 54, city: "Helsinki" },
+      { name: "Margaret Hamilton", age: 87, city: "Boston" },
+      { name: "Tim Berners-Lee", age: 69, city: "London" }
+    ];
+
+    let currentData = [...people];
+    let sortAsc = { name: true, age: true };
+
+    const tbody = document.querySelector("#tableBody");
+    const searchInput = document.querySelector("#searchInput");
+
+   
+    function renderTable(data) {
+      tbody.innerHTML = "";
+
+      if (data.length === 0) {
+        const emptyTr = document.createElement("tr");
+        const emptyTd = document.createElement("td");
+        emptyTd.colSpan = 3;
+        emptyTd.style.textAlign = "center";
+        emptyTd.textContent = "No matching records found.";
+        emptyTr.appendChild(emptyTd);
+        tbody.appendChild(emptyTr);
+        return;
+      }
+
+      data.forEach(person => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = person.name;
+
+        const tdAge = document.createElement("td");
+        tdAge.textContent = person.age;
+
+        const tdCity = document.createElement("td");
+        tdCity.textContent = person.city;
+
+        tr.append(tdName, tdAge, tdCity);
+        tbody.appendChild(tr);
+      });
+    }
+
+   
+    searchInput.addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+      const filtered = currentData.filter(person => 
+        person.name.toLowerCase().includes(query) || 
+        person.city.toLowerCase().includes(query)
+      );
+      renderTable(filtered);
+    });
+
+   
+    document.querySelector("#sortNameBtn").addEventListener("click", () => {
+      currentData.sort((a, b) => 
+        sortAsc.name ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+      );
+      sortAsc.name = !sortAsc.name;
+      renderTable(currentData);
+    });
+
+  
+    document.querySelector("#sortAgeBtn").addEventListener("click", () => {
+      currentData.sort((a, b) => sortAsc.age ? a.age - b.age : b.age - a.age);
+      sortAsc.age = !sortAsc.age;
+      renderTable(currentData);
+    });
+
+    renderTable(currentData);
+  </script>
+</body>
+</html>
